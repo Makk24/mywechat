@@ -9,6 +9,7 @@ namespace myweixin
 {
     public partial class index : System.Web.UI.Page
     {
+
         private readonly String Token = "weixinmakk";
 
         protected void Page_Load(object sender, EventArgs e)

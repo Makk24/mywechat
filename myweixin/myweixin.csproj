@@ -88,6 +88,16 @@
     <Compile Include="index.aspx.designer.cs">
       <DependentUpon>index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Model\Enum\Event.cs" />
+    <Compile Include="Model\Enum\ResponseMsgType.cs" />
+    <Compile Include="Model\MessageBase.cs" />
+    <Compile Include="Model\ResponseMessage.cs" />
+    <Compile Include="Model\RequestMessage.cs" />
+    <Compile Include="Model\ResponseMessageBase.cs" />
+    <Compile Include="Model\RequestMessageBase.cs" />
+    <Compile Include="Model\Enum\RequestMsgType.cs" />
+    <Compile Include="Model\RequestMessageEvent.cs" />
+    <Compile Include="Model\RequestMessageEventBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>

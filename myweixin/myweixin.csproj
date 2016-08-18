@@ -98,6 +98,8 @@
     <Compile Include="Model\Enum\RequestMsgType.cs" />
     <Compile Include="Model\RequestMessageEvent.cs" />
     <Compile Include="Model\RequestMessageEventBase.cs" />
+    <Compile Include="Model\WeixinException.cs" />
+    <Compile Include="Model\Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>

@@ -15,7 +15,6 @@
             <tr>
                 <td><asp:Label ID="Label2" runat="server" Text="doi:"></asp:Label>&nbsp;&nbsp;</td>
                 <td><asp:TextBox ID="TextBox2" runat="server" Width="400" Height="50" TextMode="MultiLine"></asp:TextBox>（多个doi，使用英文逗号分隔，如：10.1038/480426a,10.1038/480425a）<asp:Button ID="Button1" runat="server" Text="获取" OnClick="Button1_Click" Height="32px" Width="73px" />
-
                 </td>
             </tr>
         </table>

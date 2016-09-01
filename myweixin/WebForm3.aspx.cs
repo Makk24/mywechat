@@ -199,10 +199,10 @@ namespace myweixin
                 strb.AppendFormat("<td >{0}</td>", item.title);
                 strb.AppendFormat("<td>{0}</td>", item.doi);
                 strb.AppendFormat("<td x:str>{0}</td>", item.pmid);
-                strb.AppendFormat("<td>{0}</td>", string.Join(",", item.tq));
+                strb.AppendFormat("<td>{0}</td>", ArrayToString(item.tq));
                 strb.AppendFormat("<td>{0}</td>", item.ads_id);
                 strb.AppendFormat("<td>{0}</td>", item.altmetric_jid);
-                strb.AppendFormat("<td >{0}</td>", string.Join(",", item.issns));
+                strb.AppendFormat("<td >{0}</td>", ArrayToString(item.issns));
                 strb.AppendFormat("<td>{0}</td>", item.journal);
                 strb.AppendFormat("<td >{0}</td>", item.cohorts.sci);
                 strb.AppendFormat("<td >{0}</td>", item.cohorts.pub);
@@ -244,7 +244,7 @@ namespace myweixin
                 strb.AppendFormat("<td x:str >{0}</td>", item.url); ;
                 strb.AppendFormat("<td x:str >{0}</td>", GetDateTimeFromXml(item.added_on));
                 strb.AppendFormat("<td x:str>{0}</td>", GetDateTimeFromXml(item.published_on));
-                strb.AppendFormat("<td x:str>{0}</td>", string.Join(",", item.subjects));
+                strb.AppendFormat("<td x:str>{0}</td>", ArrayToString(item.subjects));
                 strb.AppendFormat("<td x:str >{0}</td>", item.readers.citeulike);
                 strb.AppendFormat("<td x:str>{0}</td>", item.readers.mendeley);
                 strb.AppendFormat("<td x:str>{0}</td>", item.readers.connotea);
@@ -267,6 +267,15 @@ namespace myweixin
             System.Web.HttpContext.Current.Response.Write(strb);
             System.Web.HttpContext.Current.Response.End();
 
+        }
+
+        public static string ArrayToString(string[] str)
+        {
+            if (str == null || str.Length <= 0)
+            {
+                return string.Empty;
+            }
+            return string.Join(",", str);
         }
         /// <summary>
         /// 转换微信时间为c#时间

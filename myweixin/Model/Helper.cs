@@ -152,6 +152,89 @@ namespace myweixin.Model
                 }
             }
         }
+
+        public static XDocument ConvertEntityToXml<T>(this T entity) where T : class, new()
+        {
+            entity = entity ?? new T();
+            var doc=new XDocument();
+            doc.Add(new XElement("xml"));
+            var root = doc.Root;
+            /*微信对字段排序有严格要求，这里对排序进行强制约束*/
+            var propNameOrder = new List<string>() {"ToUserName", "FromUserName", "CreateTime", "MsgType"};
+            //不同返回类型需要对应不同的特殊格式进行排序
+            if (entity is ResponseMessageNews)
+            {
+                propNameOrder.AddRange(new[]{"ArticleCount","Articles",/*以下是Article属性*/"Title","Description","PicUrl","Url"});
+            }else if (entity is ResponseMessageMusic)
+            {
+                propNameOrder.AddRange(new[] { "Music",/*以下是Music属性*/"Title", "Description", "MusicUrl", "HQMusicUrl" });
+            }
+            else if (entity is ResponseMessageImage)
+            {
+                propNameOrder.AddRange(new[] { "Image", /*以下是Image属性*/"MediaId"});
+            }
+            else if (entity is ResponseMessageVoice)
+            {
+                propNameOrder.AddRange(new[] { "Voice", /*以下是Voice属性*/"MediaId" });
+            }
+            else if (entity is ResponseMessageVideo)
+            {
+                propNameOrder.AddRange(new[] { "Video",/*以下是Video属性*/"MediaId" });
+            }
+            else 
+            {
+                //如Text类型
+                propNameOrder.AddRange(new[] { "Content"});
+            }
+            Func<string, int> orderByPropName = propNameOrder.IndexOf;
+            var props = entity.GetType().GetProperties().OrderBy(p => orderByPropName(p.Name)).ToList();
+            foreach (var prop in props)
+            {
+                var propName = prop.Name;
+                if (propName == "Articles")
+                {
+                    //文章列表
+                    var articlesElement=new XElement("Articles");
+                    var articles = prop.GetValue(entity, null) as List<Article>;
+                    foreach (var article in articles)
+                    {
+                        var subNodes = ConvertEntityToXml(article).Root.Elements();
+                        articlesElement.Add(new XElement("item",subNodes));
+                    }
+                    root.Add(articlesElement);
+                }else if (propName == "Music" || propName == "Image" || propName == "Video" || propName == "Voice" ||
+                          propName == "Music")
+                {
+                    var musicElement = new XElement(propName);
+                    var media = prop.GetValue(entity, null);
+                    var subNodes = ConvertEntityToXml(media).Root.Elements();
+                    musicElement.Add(subNodes);
+                    root.Add(musicElement);
+                }
+                else
+                {
+                    switch (prop.PropertyType.Name)
+                    {
+                        case "String":
+                            root.Add(new XElement(propName,new XCData(prop.GetValue(entity,null) as string ??"")));
+                            break;
+                        case "DateTime":
+                            root.Add(new XElement(propName, DateTimeHelper.GetWeixingDateTime((DateTime)prop.GetValue(entity, null))));
+                            break;
+                        case "ResponseMsgType":
+                            root.Add(new XElement(propName, new XCData(prop.GetValue(entity, null).ToString().ToLower())));
+                            break;
+                        case "Article":
+                            root.Add(new XElement(propName, prop.GetValue(entity, null) as string ?? ""));
+                            break;
+                        default:
+                            root.Add(new XElement(propName,prop.GetValue(entity, null)));
+                            break;
+                    }
+                }
+            }
+            return doc;
+        }
     }
     /// <summary>
     /// 
